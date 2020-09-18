@@ -3,9 +3,7 @@ const express = require("express");
 const app = express();
 const jsonParser = express.json();
 
-const mongoose = require("./src/api/controllers/MongoDBController")
 
-const mongoURL = process.env.MONGODB_URL;
 const serverPort = process.env.PORT || 9999;
 
 app.use(express.static(__dirname + "/public"));
@@ -13,16 +11,6 @@ app.use(express.static(__dirname + "/public"));
 const {
     getMessages,
 } = require("./src/api/controllers/MongoDBController");
-
-//Starting mongo connection
-mongoose.connect(mongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, (err) => {
-    if(err) return console.log(err);
-
-    console.log(`MongoDB connected successfully ${mongoURL}`)
-});
 
 //routes
 app.get("/api/messages", (req, res) => {
