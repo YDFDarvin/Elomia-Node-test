@@ -11,7 +11,7 @@ const {
     getMessages,
 } = require("./src/api/controllers/MongoDBController");
 
-//routes
+//ROUTE get messages of SELECTED used by user_id from field 'user'
 app.get("/api/:user/messages", (req, res) => {
     //GET messages Mongo API method
     const user_id = req.params.user;
@@ -25,29 +25,12 @@ app.get("/api/:user/messages", (req, res) => {
         })
 });
 
-/*app.get("/api/users/:id", function(req, res){
+//ROUTE post message of user
+app.post("/api/send", (req, res) => {
 
-    const id = req.params.id;
-    User.findOne({_id: id}, function(err, user){
-
-        if(err) return console.log(err);
-        res.send(user);
-    });
 });
 
-app.post("/api/users", jsonParser, function (req, res) {
 
-    if(!req.body) return res.sendStatus(400);
-
-    const userName = req.body.name;
-    const userAge = req.body.age;
-    const user = new User({name: userName, age: userAge});
-
-    user.save(function(err){
-        if(err) return console.log(err);
-        res.send(user);
-    });
-});*/
 
 //Server launch
 app.listen(serverPort, function(){
