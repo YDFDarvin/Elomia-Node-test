@@ -8,6 +8,6 @@ const messageScheme = new Schema({
     updated_at: Date
 }, {versionKey: false});
 
-const MessageModel = mongoose.model("Message", messageScheme);
+const MessageModel = mongoose.model("Messages", messageScheme);
 
 module.exports = MessageModel;
