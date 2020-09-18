@@ -1,12 +1,14 @@
 require('dotenv').config();
 const express = require("express");
+const events = require('events');
+
 const app = express();
+const messageEventEmitter = new events.EventEmitter();
 
 const serverPort = process.env.PORT || 9999;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
 
 const {
     getMessages,
@@ -20,11 +22,26 @@ app.get("/api/:user/messages", (req, res) => {
     const messages = getMessages(user_id);
 
     messages
-        .then((data) => res.send(data))
+        .then((data) => res.status(200).send(data))
         .catch(err => {
             console.trace(err)
             res.status(500).send("Can not to get messages!");
         })
+});
+
+//ROUTE get last new message with long-polling
+app.get("/api/:user/messages/new", (req, res) => {
+    //GET messages Mongo API method
+    const user_id = Number.parseInt(req.params.user);
+
+    messageEventEmitter.once('newMessage', (message) => {
+        if (user_id === message.user_id) {
+            console.log('resending')
+            res.status(200).send(message);
+        } else {
+            res.status(404).send();
+        }
+    });
 });
 
 //ROUTE post message of user
@@ -37,7 +54,10 @@ app.post("/api/send", (req, res) => {
             text: body.text,
             created_on: body.created_on
         })
-            .then((res) => res.status(200).send("Successfully added!"))
+            .then(() => {
+                messageEventEmitter.emit('newMessage', body);
+                res.status(200).send("Successfully added!")
+            })
             .catch((err) => {
                 console.trace(err);
                 res.status(500).send("Saving was dumped!")

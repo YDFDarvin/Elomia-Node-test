@@ -8,11 +8,15 @@ const getMessages = (user_id) => MessageModel.find({
     user_id
 }).then(res => res).catch(err => console.log(err));
 
+const getLastMessages = (user_id, timestamp) => MessageModel.find({
+    user_id,
+}).then(res => res).catch(err => console.log(err));
+
 const postMessage = ({
     user_id,
     text,
     created_on
-}) => MessageModel.save({
+}) => MessageModel.create({
     user_id,
     text,
     created_on,
