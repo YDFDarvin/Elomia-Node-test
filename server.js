@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const jsonParser = express.json();
 
-
 const serverPort = process.env.PORT || 9999;
 
 app.use(express.static(__dirname + "/public"));
@@ -13,16 +12,17 @@ const {
 } = require("./src/api/controllers/MongoDBController");
 
 //routes
-app.get("/api/messages", (req, res) => {
+app.get("/api/:user/messages", (req, res) => {
     //GET messages Mongo API method
-    const messages = getMessages()
+    const user_id = req.params.user;
+    const messages = getMessages(user_id);
 
-    console.log(messages)
-
-/*
-    if(err) return console.log(err);
-    res.send(users)*/
-
+    messages
+        .then((data) => res.send(data))
+        .catch(err => {
+            console.trace(err)
+            res.status(500).send("Can not to get messages!");
+        })
 });
 
 /*app.get("/api/users/:id", function(req, res){

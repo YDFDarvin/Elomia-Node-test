@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const mongoURL = process.env.MONGODB_URL;
 
 const MessageModel = require("../models/Message");
-const getMessages = () => MessageModel.find({}).then(res => res).catch(err => console.log(err));
+const getMessages = (user_id) => MessageModel.find({
+    user_id
+}).then(res => res).catch(err => console.log(err));
 
 //Starting mongo connection
 mongoose.connect(mongoURL, {
