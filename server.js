@@ -42,8 +42,7 @@ app.post("/api/send", (req, res) => {
                 console.trace(err);
                 res.status(500).send("Saving was dumped!")
             })
-    }
-    else {
+    } else {
         res.status(400).send("Wrong Data");
     }
 });
