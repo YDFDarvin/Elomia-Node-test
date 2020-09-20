@@ -2,23 +2,6 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 const mongoURL = process.env.MONGODB_URL;
 
-const MessageModel = require("../models/Message");
-
-const getMessages = (user_id) => MessageModel.find({
-    user_id
-}).then(res => res).catch(err => console.log(err));
-
-const postMessage = ({
-    user_id,
-    text,
-    created_on
-}) => MessageModel.create({
-    user_id,
-    text,
-    created_on,
-    updated_at: null
-})
-
 //Starting mongo connection
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
@@ -29,7 +12,8 @@ mongoose.connect(mongoURL, {
     console.log(`MongoDB connected successfully ${mongoURL}`)
 });
 
+const MessageController = require('./MessageController');
+
 module.exports = {
-    getMessages,
-    postMessage
+    ...MessageController,
 }
